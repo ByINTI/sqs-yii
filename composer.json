@@ -1,56 +1,29 @@
 {
-    "name": "byinti/yii2-queue",
-    "description": "Yii2 Queue Extension which supported DB, Redis, RabbitMQ, Beanstalk and Gearman",
+    "name": "byinti/sqs-yii",
+    "description": "Yii2 Queue Extension for AWS SQS for simple message pushing",
     "type": "yii2-extension",
-    "keywords": ["yii", "queue", "async", "gii", "db", "redis", "rabbitmq", "beanstalk", "gearman"],
+    "keywords": ["yii", "byinti", "sqs"],
     "license": "BSD-3-Clause",
     "authors": [
         {
-            "name": "Roman Zhuravlev",
-            "email": "zhuravljov@gmail.com"
+            "name": "Daniel Resnitzky",
+            "email": "dcresnitzky@gmail.com"
         }
     ],
     "support": {
-        "issues": "https://github.com/yiisoft/yii2-queue/issues",
-        "source": "https://github.com/yiisoft/yii2-queue",
-        "docs": "https://github.com/yiisoft/yii2-queue/blob/master/docs/guide"
+        "issues": "https://github.com/ByINTI/sqs-yii/issues",
+        "source": "https://github.com/ByINTI/sqs-yii",
     },
     "require": {
         "php": ">=5.5.0",
-        "yiisoft/yii2": "~2.0.10",
-        "symfony/process": "*"
+        "yiisoft/yii2": "~2.0.10"
     },
     "require-dev": {
-        "yiisoft/yii2-redis": "*",
-        "php-amqplib/php-amqplib": "*",
-        "pda/pheanstalk": "*",
-        "jeremeamia/superclosure": "*",
-        "yiisoft/yii2-debug": "*",
-        "yiisoft/yii2-gii": "*",
         "phpunit/phpunit": "~4.4"
-    },
-    "suggest": {
-        "ext-pcntl": "Need for process signals.",
-        "yiisoft/yii2-redis": "Need for Redis queue.",
-        "pda/pheanstalk": "Need for Beanstalk queue.",
-        "php-amqplib/php-amqplib": "Need for AMQP queue.",
-        "ext-gearman": "Need for Gearman queue."
     },
     "autoload": {
         "psr-4": {
-            "byinti\\queue\\": "src",
-            "byinti\\queue\\sqs\\": "src/drivers/sqs"
+            "byinti\\sqs\\": "src"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ]
+    }
 }

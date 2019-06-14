@@ -1,31 +1,56 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
+namespace byinti\sqs;
 
-namespace byinti\queue;
-
-use byinti\queue\serializers\JsonSerializer;
-use byinti\queue\SqsPushEvent;
-use Yii;
-use yii\base\Component;
-use yii\base\InvalidParamException;
-use yii\di\Instance;
-use yii\helpers\VarDumper;
+use Aws\Credentials\CredentialProvider;
+use Aws\Sqs\SqsClient;
+use yii\base\NotSupportedException;
 
 /**
- * Base Queue
- *
- * @author Roman Zhuravlev <zhuravljov@gmail.com>
+ * SQS Queue.
  */
-abstract class Queue extends Component
+class Queue
 {
     /**
-     * @var Serializer|array
+     * The SQS url.
+     * @var string
+     */
+    public $url;
+    /**
+     * aws access key.
+     * @var string|null
+     */
+    public $key;
+    /**
+     * aws secret.
+     * @var string|null
+     */
+    public $secret;
+    /**
+     * region where queue is hosted.
+     * @var string
+     */
+    public $region = '';
+    /**
+     * API version.
+     * @var string
+     */
+    public $version = 'latest';
+    /**
+     * Message Group ID for FIFO queues.
+     * @var string
+     * @since 2.2.1
+     */
+    public $messageGroupId = 'default';
+
+    /**
+     * Json serializer by default.
+     * @inheritdoc
      */
     public $serializer = JsonSerializer::class;
+    /**
+     * @var SqsClient
+     */
+    private $_client;
 
     /**
      * @inheritdoc
@@ -33,27 +58,67 @@ abstract class Queue extends Component
     public function init()
     {
         parent::init();
-        $this->serializer = $this->serializer;
     }
 
     /**
-     * Pushes job into queue
-     *
-     * @param SqsPushEvent $message
-     * @return string|null id of a job message
+     * @param SqsPushEvent $event
+     * @return string|null
      */
-    public function push(SqsPushEvent $message)
+    public function push(SqsPushEvent $event)
     {
-        $serialized = $this->serializer->serialize($message);
+        $message = $this->serializer->serialize($event->message);
 
-        return $this->pushMessage($serialized, $message->ttr, $message->delay);
+        return $this->pushMessage($message, $event->ttr, $event->delay);
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function pushMessage($message, $ttr, $delay)
+    {
+        $request = [
+            'QueueUrl' => $this->url,
+            'MessageBody' => $message,
+            'DelaySeconds' => $delay,
+            'MessageAttributes' => [
+                'TTR' => [
+                    'DataType' => 'Number',
+                    'StringValue' => $ttr,
+                ],
+            ],
+        ];
+        if (substr($this->url, -5) === '.fifo') {
+            $request['MessageGroupId'] = $this->messageGroupId;
+            $request['MessageDeduplicationId'] = hash('sha256', $message);
+        }
+        $response = $this->getClient()->sendMessage($request);
+        return $response['MessageId'];
     }
 
     /**
-     * @param string $message
-     * @param int $ttr time to reserve in seconds
-     * @param int $delay
-     * @return string|null id of a job message
+     * @return \Aws\Sqs\SqsClient
      */
-    abstract protected function pushMessage($message, $ttr, $delay);
+    protected function getClient()
+    {
+        if ($this->_client) {
+            return $this->_client;
+        }
+
+        if ($this->key !== null && $this->secret !== null) {
+            $credentials = [
+                'key' => $this->key,
+                'secret' => $this->secret,
+            ];
+        } else {
+            // use default provider if no key and secret passed
+            //see - http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html#credential-profiles
+            $credentials = CredentialProvider::defaultProvider();
+        }
+
+        $this->_client = new SqsClient([
+            'credentials' => $credentials,
+            'region' => $this->region,
+            'version' => $this->version,
+        ]);
+        return $this->_client;
+    }
 }

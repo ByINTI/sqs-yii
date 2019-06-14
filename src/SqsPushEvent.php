@@ -1,13 +1,12 @@
 <?php
 
-namespace byinti\queue;
+namespace byinti\sqs;
 
 use yii\base\Event;
 /**
  * Class PushEvent
- *
  */
-abstract class SqsPushEvent extends Event
+class SqsPushEvent extends Event
 {
     /**
      * @var string|null unique id of a job
@@ -26,4 +25,13 @@ abstract class SqsPushEvent extends Event
      * @var string message to queue
      */
     public $message;
+
+    /**
+     * SqsPushEvent constructor.
+     * @param string $message
+     */
+    public function __construct($message)
+    {
+        $this->message = $message;
+    }
 }

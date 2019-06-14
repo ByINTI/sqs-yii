@@ -1,6 +1,6 @@
 <?php
 
-namespace byinti\queue\serializers;
+namespace byinti\sqs;
 
 use Yii;
 use yii\base\InvalidConfigException;
