@@ -38,8 +38,8 @@
     },
     "autoload": {
         "psr-4": {
-            "yii\\queue\\": "src",
-            "yii\\queue\\sqs\\": "src/drivers/sqs"
+            "byinti\\queue\\": "src",
+            "byinti\\queue\\sqs\\": "src/drivers/sqs"
         }
     },
     "extra": {

@@ -8,7 +8,7 @@
 namespace byinti\queue;
 
 use byinti\queue\serializers\JsonSerializer;
-use byinyi\queue\SqsPushEvent;
+use byinti\queue\SqsPushEvent;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidParamException;

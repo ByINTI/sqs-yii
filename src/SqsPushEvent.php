@@ -1,6 +1,6 @@
 <?php
 
-namespace byinyi\queue;
+namespace byinti\queue;
 
 use yii\base\Event;
 /**
