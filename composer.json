@@ -12,7 +12,7 @@
     ],
     "support": {
         "issues": "https://github.com/ByINTI/sqs-yii/issues",
-        "source": "https://github.com/ByINTI/sqs-yii",
+        "source": "https://github.com/ByINTI/sqs-yii"
     },
     "require": {
         "php": ">=5.5.0",
