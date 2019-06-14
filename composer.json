@@ -1,5 +1,5 @@
 {
-    "name": "ByINTI/yii2-queue",
+    "name": "byinti/yii2-queue",
     "description": "Yii2 Queue Extension which supported DB, Redis, RabbitMQ, Beanstalk and Gearman",
     "type": "yii2-extension",
     "keywords": ["yii", "queue", "async", "gii", "db", "redis", "rabbitmq", "beanstalk", "gearman"],
@@ -39,13 +39,6 @@
     "autoload": {
         "psr-4": {
             "yii\\queue\\": "src",
-            "yii\\queue\\amqp\\": "src/drivers/amqp",
-            "yii\\queue\\beanstalk\\": "src/drivers/beanstalk",
-            "yii\\queue\\db\\": "src/drivers/db",
-            "yii\\queue\\file\\": "src/drivers/file",
-            "yii\\queue\\gearman\\": "src/drivers/gearman",
-            "yii\\queue\\redis\\": "src/drivers/redis",
-            "yii\\queue\\sync\\": "src/drivers/sync",
             "yii\\queue\\sqs\\": "src/drivers/sqs"
         }
     },

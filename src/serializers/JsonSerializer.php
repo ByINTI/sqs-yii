@@ -1,23 +1,13 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
-namespace yii\queue\serializers;
+namespace byinti\queue\serializers;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Object;
 use yii\helpers\Json;
 
-/**
- * Class Json
- *
- * @author Roman Zhuravlev <zhuravljov@gmail.com>
- */
-class JsonSerializer extends Object implements Serializer
+class JsonSerializer extends Object
 {
     /**
      * @var string
@@ -31,17 +21,9 @@ class JsonSerializer extends Object implements Serializer
     /**
      * @inheritdoc
      */
-    public function serialize($job)
+    public function serialize($message)
     {
-        return Json::encode($this->toArray($job), $this->options);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function unserialize($serialized)
-    {
-        return $this->fromArray(Json::decode($serialized));
+        return Json::encode($this->toArray($message), $this->options);
     }
 
     /**
@@ -76,33 +58,5 @@ class JsonSerializer extends Object implements Serializer
         }
         
         return $data;
-    }
-
-    /**
-     * @param array $data
-     * @return mixed
-     */
-    protected function fromArray($data)
-    {
-        if (!is_array($data)) {
-            return $data;
-        }
-        
-        if (!isset($data[$this->classKey])) {
-            $result = [];
-            foreach ($data as $key => $value) {
-                $result[$key] = $this->fromArray($value);
-            }
-            
-            return $result;
-        }
-        
-        $config = ['class' => $data[$this->classKey]];
-        unset($data[$this->classKey]);
-        foreach ($data as $property => $value) {
-            $config[$property] = $this->fromArray($value);
-        }
-        
-        return Yii::createObject($config);
     }
 }
